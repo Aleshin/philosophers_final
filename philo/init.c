@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "philo.h"
 
-void	init_input(t_philo *data, char **argv)
+void	input(t_philo *data, char **argv)
 {
 	data->num_of_philos = ft_atoi(argv[1]);
 	data->time_to_die = ft_atoi(argv[2]);
@@ -45,7 +45,7 @@ void	set_philosophers(t_philo *data, t_program *set)
 		set->philos[i].time_to_eat = data->time_to_eat;
 		set->philos[i].time_to_sleep = data->time_to_sleep;
 		set->philos[i].num_meals = data->num_meals;
-		set->philos[i].ptr_dead_flag = &set->dead_flag;
+		set->philos[i].end_flag = &set->dead_flag;
 		set->philos[i].program = set;
 		i++;
 	}
@@ -70,7 +70,7 @@ int	init_mutexes(t_program *set, t_philo *data)
 		pthread_mutex_init(&set->forks[i], NULL);
 		set->philos[i].l_fork = &set->forks[i];
 		set->philos[i].r_fork = &set->forks[(i + 1) % data->num_of_philos];
-		set->philos[i].ptr_dead_flag = &set->dead_flag;
+		set->philos[i].end_flag = &set->dead_flag;
 		i++;
 	}
 	return (1);

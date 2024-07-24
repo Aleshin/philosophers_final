@@ -21,7 +21,7 @@ int	create_threads(t_philo *data, t_program *set)
 		if (pthread_create(&set->philos[i].thread,
 				NULL, routine, &set->philos[i]))
 		{
-			ft_putstr_fd("Error thread create", 2);
+			write(2, "Error thread create\n", 20);
 			cleanup_all(set);
 			return (0);
 		}
@@ -39,7 +39,7 @@ int	join_threads(t_philo *data, t_program *set)
 	{
 		if (pthread_join(set->philos[i].thread, NULL))
 		{
-			ft_putstr_fd("Error thread join", 2);
+			write(2, "Error thread join\n", 18);
 			cleanup_all(set);
 			return (0);
 		}
@@ -54,7 +54,7 @@ int	create_and_join_threads(t_philo *data, t_program *set)
 
 	if (pthread_create(&monitor_thread, NULL, monitor, set))
 	{
-		ft_putstr_fd("Error monitor thread create", 2);
+		write(2, "Error monitor thread create\n", 28);
 		cleanup_all(set);
 		return (0);
 	}
@@ -64,7 +64,7 @@ int	create_and_join_threads(t_philo *data, t_program *set)
 		return (0);
 	if (pthread_join(monitor_thread, NULL))
 	{
-		ft_putstr_fd("Error monitor thread join", 2);
+		write(2, "Error monitor thread join\n", 26);
 		cleanup_all(set);
 		return (0);
 	}

@@ -16,7 +16,7 @@ size_t	get_current_time(void)
 	struct timeval	time;
 
 	if (gettimeofday(&time, NULL) == -1)
-		ft_putstr_fd("gettimeofday() error\n", 2);
+		write(2, "gettimeofday() error\n", 21);
 	return (time.tv_sec * 1000 + time.tv_usec / 1000);
 }
 
@@ -30,7 +30,7 @@ int	ft_usleep(size_t milliseconds)
 	return (0);
 }
 
-//returns 0 if number is 0 or negative
+//returns 0 if number is 0, negative or not number
 unsigned	int	ft_atoi(char *str)
 {
 	int	res;
@@ -47,20 +47,14 @@ unsigned	int	ft_atoi(char *str)
 		res = res * 10 + (*str - '0');
 		str++;
 	}
+	if (*str != '\0')
+		return (0);
 	return (res);
-}
-
-void	ft_putstr_fd(char *str, int fd)
-{
-	if (str == NULL || fd < 0)
-		return ;
-	while (*str)
-		write(fd, str++, 1);
 }
 
 void	safe_print(t_philo *philo, char *str)
 {
-	if (!check_dead_flag(philo))
+	if (!check_end_flag(philo))
 	{
 		pthread_mutex_lock(&philo->program->write_lock);
 		printf("%zu %d %s\n", get_current_time()

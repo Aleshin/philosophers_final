@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -Werror
 
-SRC = philo.c check.c threads.c utils.c init.c init_threads.c lifecycle.c
+SRC = philo.c threads.c utils.c init.c init_threads.c lifecycle.c
 OBJ_DIR = OBJ
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 NAME = philo

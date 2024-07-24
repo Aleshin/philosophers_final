@@ -11,10 +11,10 @@
 /* ************************************************************************** */
 #include "philo.h"
 
-int	check_dead_flag(t_philo *philo)
+int	check_end_flag(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->program->dead_lock);
-	if (*philo->ptr_dead_flag == 1)
+	if (*philo->end_flag == 1)
 	{
 		pthread_mutex_unlock(&philo->program->dead_lock);
 		return (1);
@@ -46,9 +46,9 @@ static void	ft_sleep(t_philo *philo)
 static void	eat(t_philo *philo)
 {
 	pthread_mutex_lock(philo->r_fork);
-	safe_print(philo, "has taken right fork");
+	safe_print(philo, "has taken a fork");
 	pthread_mutex_lock(philo->l_fork);
-	safe_print(philo, "has taken left fork");
+	safe_print(philo, "has taken a fork");
 	pthread_mutex_lock(&philo->program->meal_lock);
 	philo->last_meal = get_current_time();
 	philo->eating = 1;
@@ -78,13 +78,13 @@ void	*routine(void *arg)
 	{
 		ft_usleep(philo->time_to_die);
 		pthread_mutex_lock(&philo->program->dead_lock);
-		*philo->ptr_dead_flag = 1;
+		*philo->end_flag = 1;
 		pthread_mutex_unlock(&philo->program->dead_lock);
 		return (arg);
 	}
 	while (1)
 	{
-		if (check_dead_flag(philo))
+		if (check_end_flag(philo))
 			break ;
 		eat(philo);
 		ft_sleep(philo);

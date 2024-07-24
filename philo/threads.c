@@ -86,7 +86,7 @@ void	*monitor(void *arg)
 	program = (t_program *)arg;
 	while (1)
 	{
-		if (check_dead_flag(&program->philos[0]))
+		if (check_end_flag(&program->philos[0]))
 			return (arg);
 		if (all_ate(program) || check_all_philos(program))
 		{

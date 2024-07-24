@@ -11,32 +11,49 @@
 /* ************************************************************************** */
 #include "philo.h"
 
-/*
-ARGUMENTS
-number_of_philosophers
-time_to_die time_to_eat
-time_to_sleep
-[number_of_times_each_philosopher_must_eat]
-*/
+int	check_input(int argc, char **argv)
+{
+	int	i;
+
+	i = 1;
+	if (argc >= 5 && argc <= 6)
+	{
+		while (i < argc)
+		{
+			if (ft_atoi(argv[i]) == 0)
+			{
+				write(2, "wrong argument\n", 15);
+				return (0);
+			}
+			i++;
+		}
+	}
+	else
+	{
+		write(2, "Wrong # of arguments\n", 21);
+		return (0);
+	}
+	return (1);
+}
 
 int	main(int argc, char **argv)
 {
 	t_philo		data;
 	t_program	set;
 
-	if (!input_ok(argc, argv))
-		return (EXIT_FAILURE);
-	init_input(&data, argv);
+	if (!check_input(argc, argv))
+		return (1);
+	input(&data, argv);
 	if (!init_mutexes(&set, &data))
 	{
 		printf("Error init mutexes\n");
-		return (EXIT_FAILURE);
+		return (1);
 	}
 	set_philosophers(&data, &set);
 	if (!create_and_join_threads(&data, &set))
 	{
 		printf("Error create and join threads\n");
-		return (EXIT_FAILURE);
+		return (1);
 	}
 	cleanup_all(&set);
 	return (0);
