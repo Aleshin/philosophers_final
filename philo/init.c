@@ -59,18 +59,20 @@ int	init_mutexes(t_program *set, t_philo *data)
 	set->philos = malloc(data->num_of_philos * sizeof(t_philo));
 	if (!set->philos)
 		return (0);
-	set->forks = malloc(data->num_of_philos * sizeof(pthread_mutex_t));
-	if (!set->forks)
-		return (0);
 	pthread_mutex_init(&set->write_lock, NULL);
 	pthread_mutex_init(&set->meal_lock, NULL);
 	pthread_mutex_init(&set->dead_lock, NULL);
 	while (i < data->num_of_philos)
 	{
-		pthread_mutex_init(&set->forks[i], NULL);
-		set->philos[i].l_fork = &set->forks[i];
-		set->philos[i].r_fork = &set->forks[(i + 1) % data->num_of_philos];
+		pthread_mutex_init(&set->philos[i].l_fork, NULL);
 		set->philos[i].end_flag = &set->dead_flag;
+		i++;
+	}
+	i = 0;
+	while (i < data->num_of_philos)
+	{
+		set->philos[i].r_fork
+			= set->philos[(i + 1) % data->num_of_philos].l_fork;
 		i++;
 	}
 	return (1);
@@ -83,12 +85,11 @@ void	cleanup_all(t_program *set)
 	i = 0;
 	while (i < set->philos[0].num_of_philos)
 	{
-		pthread_mutex_destroy(&set->forks[i]);
+		pthread_mutex_destroy(&set->philos[i].l_fork);
 		i++;
 	}
 	pthread_mutex_destroy(&set->meal_lock);
 	pthread_mutex_destroy(&set->dead_lock);
 	pthread_mutex_destroy(&set->write_lock);
-	free(set->forks);
 	free(set->philos);
 }

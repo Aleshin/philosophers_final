@@ -45,9 +45,9 @@ static void	ft_sleep(t_philo *philo)
 //print only if dead flag is 0
 static void	eat(t_philo *philo)
 {
-	pthread_mutex_lock(philo->r_fork);
+	pthread_mutex_lock(&philo->r_fork);
 	safe_print(philo, "has taken a fork");
-	pthread_mutex_lock(philo->l_fork);
+	pthread_mutex_lock(&philo->l_fork);
 	safe_print(philo, "has taken a fork");
 	pthread_mutex_lock(&philo->program->meal_lock);
 	philo->last_meal = get_current_time();
@@ -62,8 +62,8 @@ static void	eat(t_philo *philo)
 		pthread_mutex_unlock(&philo->program->meal_lock);
 	}
 	ft_usleep(philo->time_to_eat);
-	pthread_mutex_unlock(philo->r_fork);
-	pthread_mutex_unlock(philo->l_fork);
+	pthread_mutex_unlock(&philo->r_fork);
+	pthread_mutex_unlock(&philo->l_fork);
 }
 
 //function executed in each tread

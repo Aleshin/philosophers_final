@@ -35,8 +35,8 @@ typedef struct s_philo
 	int					num_of_philos;
 	int					num_meals;
 	int					*end_flag;
-	pthread_mutex_t		*r_fork;
-	pthread_mutex_t		*l_fork;
+	pthread_mutex_t		r_fork;
+	pthread_mutex_t		l_fork;
 	struct s_program	*program;
 }	t_philo;
 
@@ -47,7 +47,6 @@ typedef struct s_program
 	pthread_mutex_t	dead_lock; //shared
 	pthread_mutex_t	meal_lock; //shared
 	pthread_mutex_t	write_lock; //shared
-	pthread_mutex_t	*forks; //shared
 	t_philo			*philos; //array of structs type t_philo with all info
 }	t_program;
 
