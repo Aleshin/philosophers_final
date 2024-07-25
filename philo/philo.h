@@ -18,7 +18,6 @@
 # include <pthread.h>
 # include <stdlib.h>
 # include <sys/time.h>
-# define PHILO_MAX 200
 
 typedef struct s_philo
 {
@@ -28,13 +27,7 @@ typedef struct s_philo
 	int					flag_all_ate; //1 0 if meals counter == num_meals
 	int					meals_counter; //++
 	size_t				last_meal; //start eating + time to eat//shared
-//	size_t				time_to_die;
-//	size_t				time_to_eat;
-//	size_t				time_to_sleep;
 	size_t				start_time;
-//	int					num_of_philos;
-//	int					num_meals;
-	int					*end_flag;
 	pthread_mutex_t		r_fork;
 	pthread_mutex_t		l_fork;
 	struct s_data		*data;
@@ -47,7 +40,7 @@ typedef struct s_data
 	size_t			time_to_eat;
 	size_t			time_to_sleep;
 	int				num_meals;
-	int				dead_flag; //shared
+	int				end_flag; //shared
 	int				finished_philo_counter; //shared
 	pthread_mutex_t	dead_lock; //shared
 	pthread_mutex_t	meal_lock; //shared
@@ -70,7 +63,7 @@ void			*monitor(void *arg);
 size_t			get_current_time(void);
 unsigned int	ft_atoi(char *str);
 void			print_death(t_philo *philo);
-int				check_end_flag(t_philo *philo);
+int				check_end_flag(t_data *data);
 void			safe_print(t_philo *philo, char *str);
 int				ft_usleep(size_t milliseconds);
 

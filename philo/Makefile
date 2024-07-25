@@ -1,7 +1,7 @@
-CC = gcc
+CC = gcc -pthread -fsanitize=thread -g
 CFLAGS = -Wall -Wextra -Werror
 
-SRC = philo.c threads.c utils.c init.c init_threads.c lifecycle.c
+SRC = philo.c init.c init_threads.c monitor.c routine.c utils.c
 OBJ_DIR = OBJ
 OBJ = $(addprefix $(OBJ_DIR)/, $(SRC:.c=.o))
 NAME = philo

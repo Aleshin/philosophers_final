@@ -42,7 +42,7 @@ static	int	check_all_philos(t_data *data)
 		if (is_dead(&data->philos[i]))
 		{
 			pthread_mutex_lock(&data->dead_lock);
-			data->dead_flag = 1;
+			data->end_flag = 1;
 			pthread_mutex_unlock(&data->dead_lock);
 			return (1);
 		}
@@ -86,12 +86,12 @@ void	*monitor(void *arg)
 	data = (t_data *)arg;
 	while (1)
 	{
-		if (check_end_flag(&data->philos[0]))
+		if (check_end_flag(data))
 			return (arg);
 		if (all_ate(data) || check_all_philos(data))
 		{
 			pthread_mutex_lock(&data->dead_lock);
-			data->dead_flag = 1;
+			data->end_flag = 1;
 			pthread_mutex_unlock(&data->dead_lock);
 			return (arg);
 		}

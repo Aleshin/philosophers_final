@@ -21,7 +21,7 @@ void	input(t_data *data, char **argv)
 		data->num_meals = ft_atoi(argv[5]);
 	else
 		data->num_meals = -1;
-	data->dead_flag = 0;
+	data->end_flag = 0;
 	data->finished_philo_counter = 0;
 }
 
@@ -44,7 +44,6 @@ int	set_philosophers(t_philo *philos, t_data *data)
 		philos[i].flag_all_ate = 0;
 		philos[i].last_meal = start_time;
 		philos[i].start_time = start_time;
-		philos[i].end_flag = 0;
 		philos[i].data = data;
 		i++;
 	}
@@ -60,11 +59,7 @@ int	init_mutexes(t_data *data, t_philo *philo)
 	pthread_mutex_init(&data->meal_lock, NULL);
 	pthread_mutex_init(&data->dead_lock, NULL);
 	while (i < data->num_of_philos)
-	{
-		pthread_mutex_init(&philo[i].l_fork, NULL);
-		philo[i].end_flag = &data->dead_flag;
-		i++;
-	}
+		pthread_mutex_init(&philo[i++].l_fork, NULL);
 	i = 0;
 	while (i < data->num_of_philos)
 	{

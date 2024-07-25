@@ -54,7 +54,7 @@ unsigned	int	ft_atoi(char *str)
 
 void	safe_print(t_philo *philo, char *str)
 {
-	if (!check_end_flag(philo))
+	if (!check_end_flag(philo->data))
 	{
 		pthread_mutex_lock(&philo->data->write_lock);
 		printf("%zu %d %s\n", get_current_time()

@@ -11,19 +11,19 @@
 /* ************************************************************************** */
 #include "philo.h"
 
-int	check_end_flag(t_philo *philo)
+int	check_end_flag(t_data *data)
 {
-	pthread_mutex_lock(&philo->data->dead_lock);
-	if (*philo->end_flag == 1)
+	pthread_mutex_lock(&data->dead_lock);
+	if (data->end_flag == 1)
 	{
-		pthread_mutex_unlock(&philo->data->dead_lock);
+		pthread_mutex_unlock(&data->dead_lock);
 		return (1);
 	}
-	pthread_mutex_unlock(&philo->data->dead_lock);
+	pthread_mutex_unlock(&data->dead_lock);
 	return (0);
 }
 
-//only prints death, so dead flag should be set to 1 before or after
+//only prints death, so end flag should be set to 1 before or after
 void	print_death(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->data->write_lock);
@@ -32,7 +32,7 @@ void	print_death(t_philo *philo)
 	pthread_mutex_unlock(&philo->data->write_lock);
 }
 
-//print only if dead flag is 0
+//print only if end flag is 0
 static void	ft_sleep(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->data->meal_lock);
@@ -42,7 +42,7 @@ static void	ft_sleep(t_philo *philo)
 	ft_usleep(philo->data->time_to_sleep);
 }
 
-//print only if dead flag is 0
+//print only if end flag is 0
 static void	eat(t_philo *philo)
 {
 	pthread_mutex_lock(&philo->r_fork);
@@ -55,7 +55,8 @@ static void	eat(t_philo *philo)
 	pthread_mutex_unlock(&philo->data->meal_lock);
 	safe_print(philo, "is eating");
 	philo->meals_counter++;
-	if (philo->data->num_meals != -1 && philo->meals_counter == philo->data->num_meals)
+	if (philo->data->num_meals != -1
+		&& philo->meals_counter == philo->data->num_meals)
 	{
 		pthread_mutex_lock(&philo->data->meal_lock);
 		philo->data->finished_philo_counter++;
@@ -78,13 +79,13 @@ void	*routine(void *arg)
 	{
 		ft_usleep(philo->data->time_to_die);
 		pthread_mutex_lock(&philo->data->dead_lock);
-		*philo->end_flag = 1;
+		philo->data->end_flag = 1;
 		pthread_mutex_unlock(&philo->data->dead_lock);
 		return (arg);
 	}
 	while (1)
 	{
-		if (check_end_flag(philo))
+		if (check_end_flag(philo->data))
 			break ;
 		eat(philo);
 		ft_sleep(philo);
