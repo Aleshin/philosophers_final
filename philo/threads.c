@@ -14,36 +14,36 @@
 //check if this particular philo is dead
 static	int	is_dead(t_philo *philo)
 {
-	pthread_mutex_lock(&philo->program->meal_lock);
+	pthread_mutex_lock(&philo->data->meal_lock);
 	if (philo->eating == 0 && (get_current_time() - philo->last_meal
-			> philo->time_to_die))
+			> philo->data->time_to_die))
 	{
-		pthread_mutex_unlock(&philo->program->meal_lock);
+		pthread_mutex_unlock(&philo->data->meal_lock);
 		print_death(philo);
 		return (1);
 	}
-	pthread_mutex_unlock(&philo->program->meal_lock);
+	pthread_mutex_unlock(&philo->data->meal_lock);
 	return (0);
 }
 
-static	int	check_all_philos(t_program *program)
+static	int	check_all_philos(t_data *data)
 {
 	int	i;
 
 	i = 0;
-	if (program->philos[0].num_of_philos == 1)
+	if (data->num_of_philos == 1)
 	{
-		ft_usleep(program->philos[0].time_to_die);
-		print_death(&program->philos[i]);
+		ft_usleep(data->time_to_die);
+		print_death(&data->philos[i]);
 		return (1);
 	}
-	while (i < program->philos[1].num_of_philos)
+	while (i < data->num_of_philos)
 	{
-		if (is_dead(&program->philos[i]))
+		if (is_dead(&data->philos[i]))
 		{
-			pthread_mutex_lock(&program->dead_lock);
-			program->dead_flag = 1;
-			pthread_mutex_unlock(&program->dead_lock);
+			pthread_mutex_lock(&data->dead_lock);
+			data->dead_flag = 1;
+			pthread_mutex_unlock(&data->dead_lock);
 			return (1);
 		}
 		i++;
@@ -51,7 +51,7 @@ static	int	check_all_philos(t_program *program)
 	return (0);
 }
 
-static	int	finish_meal_counter(t_program *program)
+static	int	finish_meal_counter(t_data *program)
 {
 	int	counter;
 
@@ -62,15 +62,15 @@ static	int	finish_meal_counter(t_program *program)
 	return (counter);
 }
 
-static	int	all_ate(t_program *program)
+static	int	all_ate(t_data *data)
 {
 	int	i;
 
 	i = 0;
-	while (i < program->philos[1].num_of_philos)
+	while (i < data->num_of_philos)
 	{
-		if (program->philos[i].num_meals != -1 && finish_meal_counter(program)
-			== program->philos[1].num_of_philos)
+		if (data->num_meals != -1 && finish_meal_counter(data)
+			== data->num_of_philos)
 		{
 			return (1);
 		}
@@ -81,18 +81,18 @@ static	int	all_ate(t_program *program)
 
 void	*monitor(void *arg)
 {
-	t_program	*program;
+	t_data	*data;
 
-	program = (t_program *)arg;
+	data = (t_data *)arg;
 	while (1)
 	{
-		if (check_end_flag(&program->philos[0]))
+		if (check_end_flag(&data->philos[0]))
 			return (arg);
-		if (all_ate(program) || check_all_philos(program))
+		if (all_ate(data) || check_all_philos(data))
 		{
-			pthread_mutex_lock(&program->dead_lock);
-			program->dead_flag = 1;
-			pthread_mutex_unlock(&program->dead_lock);
+			pthread_mutex_lock(&data->dead_lock);
+			data->dead_flag = 1;
+			pthread_mutex_unlock(&data->dead_lock);
 			return (arg);
 		}
 	}

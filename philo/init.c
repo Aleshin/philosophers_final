@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "philo.h"
 
-void	input(t_philo *data, char **argv)
+void	input(t_data *data, char **argv)
 {
 	data->num_of_philos = ft_atoi(argv[1]);
 	data->time_to_die = ft_atoi(argv[2]);
@@ -21,75 +21,72 @@ void	input(t_philo *data, char **argv)
 		data->num_meals = ft_atoi(argv[5]);
 	else
 		data->num_meals = -1;
+	data->dead_flag = 0;
+	data->finished_philo_counter = 0;
 }
 
-void	set_philosophers(t_philo *data, t_program *set)
+int	set_philosophers(t_philo *philos, t_data *data)
 {
 	size_t	start_time;
 	int		i;
 
-	i = 0;
+	philos = malloc(data->num_of_philos * sizeof(t_philo));
+	if (!philos)
+		return (0);
+	data->philos = philos;
 	start_time = get_current_time();
-	set->dead_flag = 0;
-	set->finished_philo_counter = 0;
+	i = 0;
 	while (i < data->num_of_philos)
 	{
-		set->philos[i].philo_id = i + 1;
-		set->philos[i].eating = 0;
-		set->philos[i].meals_counter = 0;
-		set->philos[i].flag_all_ate = 0;
-		set->philos[i].last_meal = start_time;
-		set->philos[i].start_time = start_time;
-		set->philos[i].num_of_philos = data->num_of_philos;
-		set->philos[i].time_to_die = data->time_to_die;
-		set->philos[i].time_to_eat = data->time_to_eat;
-		set->philos[i].time_to_sleep = data->time_to_sleep;
-		set->philos[i].num_meals = data->num_meals;
-		set->philos[i].end_flag = &set->dead_flag;
-		set->philos[i].program = set;
+		philos[i].philo_id = i + 1;
+		philos[i].eating = 0;
+		philos[i].meals_counter = 0;
+		philos[i].flag_all_ate = 0;
+		philos[i].last_meal = start_time;
+		philos[i].start_time = start_time;
+		philos[i].end_flag = 0;
+		philos[i].data = data;
 		i++;
 	}
+	return (0);
 }
 
-int	init_mutexes(t_program *set, t_philo *data)
+int	init_mutexes(t_data *data, t_philo *philo)
 {
 	int	i;
 
 	i = 0;
-	set->philos = malloc(data->num_of_philos * sizeof(t_philo));
-	if (!set->philos)
-		return (0);
-	pthread_mutex_init(&set->write_lock, NULL);
-	pthread_mutex_init(&set->meal_lock, NULL);
-	pthread_mutex_init(&set->dead_lock, NULL);
+	pthread_mutex_init(&data->write_lock, NULL);
+	pthread_mutex_init(&data->meal_lock, NULL);
+	pthread_mutex_init(&data->dead_lock, NULL);
 	while (i < data->num_of_philos)
 	{
-		pthread_mutex_init(&set->philos[i].l_fork, NULL);
-		set->philos[i].end_flag = &set->dead_flag;
+		pthread_mutex_init(&philo[i].l_fork, NULL);
+		philo[i].end_flag = &data->dead_flag;
 		i++;
 	}
 	i = 0;
 	while (i < data->num_of_philos)
 	{
-		set->philos[i].r_fork
-			= set->philos[(i + 1) % data->num_of_philos].l_fork;
+		philo[i].r_fork
+			= philo[(i + 1) % data->num_of_philos].l_fork;
 		i++;
 	}
 	return (1);
 }
 
-void	cleanup_all(t_program *set)
+void	cleanup_all(t_data *data)
 {
 	int	i;
 
 	i = 0;
-	while (i < set->philos[0].num_of_philos)
+	while (i < data->num_of_philos)
 	{
-		pthread_mutex_destroy(&set->philos[i].l_fork);
+		pthread_mutex_destroy(&data->philos[i].l_fork);
 		i++;
 	}
-	pthread_mutex_destroy(&set->meal_lock);
-	pthread_mutex_destroy(&set->dead_lock);
-	pthread_mutex_destroy(&set->write_lock);
-	free(set->philos);
+	pthread_mutex_destroy(&data->meal_lock);
+	pthread_mutex_destroy(&data->dead_lock);
+	pthread_mutex_destroy(&data->write_lock);
+	free(data->philos);
 }

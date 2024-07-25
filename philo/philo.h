@@ -28,37 +28,39 @@ typedef struct s_philo
 	int					flag_all_ate; //1 0 if meals counter == num_meals
 	int					meals_counter; //++
 	size_t				last_meal; //start eating + time to eat//shared
-	size_t				time_to_die;
-	size_t				time_to_eat;
-	size_t				time_to_sleep;
+//	size_t				time_to_die;
+//	size_t				time_to_eat;
+//	size_t				time_to_sleep;
 	size_t				start_time;
-	int					num_of_philos;
-	int					num_meals;
+//	int					num_of_philos;
+//	int					num_meals;
 	int					*end_flag;
 	pthread_mutex_t		r_fork;
 	pthread_mutex_t		l_fork;
-	struct s_program	*program;
+	struct s_data		*data;
 }	t_philo;
 
-typedef struct s_program
+typedef struct s_data
 {
+	int				num_of_philos;
+	size_t			time_to_die;
+	size_t			time_to_eat;
+	size_t			time_to_sleep;
+	int				num_meals;
 	int				dead_flag; //shared
 	int				finished_philo_counter; //shared
 	pthread_mutex_t	dead_lock; //shared
 	pthread_mutex_t	meal_lock; //shared
 	pthread_mutex_t	write_lock; //shared
 	t_philo			*philos; //array of structs type t_philo with all info
-}	t_program;
-
-//helper functions check input
-void			input(t_philo *philo, char **argv);
+}	t_data;
 
 //INIT
-void			input(t_philo *data, char **argv);
-void			set_philosophers(t_philo *data, t_program *set);
-int				create_and_join_threads(t_philo *data, t_program *set);
-int				init_mutexes(t_program *set, t_philo *data);
-void			cleanup_all(t_program *set);
+void			input(t_data *data, char **argv);
+int				set_philosophers(t_philo *data, t_data *set);
+int				create_and_join_threads(t_data *data);
+int				init_mutexes(t_data *set, t_philo *data);
+void			cleanup_all(t_data *set);
 
 //ROUTINE
 void			*routine(void *data);

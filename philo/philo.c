@@ -38,23 +38,23 @@ int	check_input(int argc, char **argv)
 
 int	main(int argc, char **argv)
 {
-	t_philo		data;
-	t_program	set;
+	t_philo		philo;
+	t_data		data;
 
 	if (!check_input(argc, argv))
 		return (1);
 	input(&data, argv);
-	if (!init_mutexes(&set, &data))
+	set_philosophers(&philo, &data);
+	if (!init_mutexes(&data, &philo))
 	{
 		printf("Error init mutexes\n");
 		return (1);
 	}
-	set_philosophers(&data, &set);
-	if (!create_and_join_threads(&data, &set))
+	if (!create_and_join_threads(&data))
 	{
 		printf("Error create and join threads\n");
 		return (1);
 	}
-	cleanup_all(&set);
+	cleanup_all(&data);
 	return (0);
 }
