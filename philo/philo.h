@@ -37,10 +37,10 @@ typedef struct s_philo
 	int					*end_flag;
 	pthread_mutex_t		r_fork;
 	pthread_mutex_t		l_fork;
-	struct s_program	*program;
+	struct s_data		*data;
 }	t_philo;
 
-typedef struct s_program
+typedef struct s_data
 {
 	int				dead_flag; //shared
 	int				finished_philo_counter; //shared
@@ -48,17 +48,17 @@ typedef struct s_program
 	pthread_mutex_t	meal_lock; //shared
 	pthread_mutex_t	write_lock; //shared
 	t_philo			*philos; //array of structs type t_philo with all info
-}	t_program;
+}	t_data;
 
 //helper functions check input
 void			input(t_philo *philo, char **argv);
 
 //INIT
 void			input(t_philo *data, char **argv);
-void			set_philosophers(t_philo *data, t_program *set);
-int				create_and_join_threads(t_philo *data, t_program *set);
-int				init_mutexes(t_program *set, t_philo *data);
-void			cleanup_all(t_program *set);
+void			set_philosophers(t_philo *data, t_data *set);
+int				create_and_join_threads(t_philo *data, t_data *set);
+int				init_mutexes(t_data *set, t_philo *data);
+void			cleanup_all(t_data *set);
 
 //ROUTINE
 void			*routine(void *data);

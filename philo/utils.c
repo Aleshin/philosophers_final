@@ -56,9 +56,9 @@ void	safe_print(t_philo *philo, char *str)
 {
 	if (!check_end_flag(philo))
 	{
-		pthread_mutex_lock(&philo->program->write_lock);
+		pthread_mutex_lock(&philo->data->write_lock);
 		printf("%zu %d %s\n", get_current_time()
 			- philo->start_time, philo->philo_id, str);
-		pthread_mutex_unlock(&philo->program->write_lock);
+		pthread_mutex_unlock(&philo->data->write_lock);
 	}
 }

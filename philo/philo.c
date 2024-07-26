@@ -39,7 +39,7 @@ int	check_input(int argc, char **argv)
 int	main(int argc, char **argv)
 {
 	t_philo		data;
-	t_program	set;
+	t_data	set;
 
 	if (!check_input(argc, argv))
 		return (1);

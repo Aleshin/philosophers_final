@@ -11,7 +11,7 @@
 /* ************************************************************************** */
 #include "philo.h"
 
-int	create_threads(t_philo *data, t_program *set)
+int	create_threads(t_philo *data, t_data *set)
 {
 	int	i;
 
@@ -30,7 +30,7 @@ int	create_threads(t_philo *data, t_program *set)
 	return (1);
 }
 
-int	join_threads(t_philo *data, t_program *set)
+int	join_threads(t_philo *data, t_data *set)
 {
 	int	i;
 
@@ -48,7 +48,7 @@ int	join_threads(t_philo *data, t_program *set)
 	return (1);
 }
 
-int	create_and_join_threads(t_philo *data, t_program *set)
+int	create_and_join_threads(t_philo *data, t_data *set)
 {
 	pthread_t	monitor_thread;
 
